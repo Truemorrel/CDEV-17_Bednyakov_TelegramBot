@@ -39,81 +39,73 @@ namespace Task_11_3_9
         /// <summary>
         /// Telegram bot account credentials class.
         /// </summary>
-
+        public static class BotCredentials
+        {
+            /// <summary>
+            /// Access token.
+            /// </summary>
+            public static readonly string BotToken = "5224117853:AAGCWDg8X_xYiBHeqBf86X8XKecH8FTI8lw";
+        }
 
         /// <summary>
         /// Class running bot client.
         /// </summary>
-
-    }
-    public static class BotCredentials
-    {
-        /// <summary>
-        /// Access token.
-        /// </summary>
-        public static readonly string BotToken = "5224117853:AAGCWDg8X_xYiBHeqBf86X8XKecH8FTI8lw";
-    }
-
-    /// <summary>
-    /// Class contains bot operational equipment.
-    /// </summary>
-    public class BotWorker
-    {
-        /// <summary>
-        /// Bot client descriptor.
-        /// </summary>
-        private ITelegramBotClient botClient;
-        private BotMessageLogic logic;
-
-        /// <summary>
-        /// Method initialize bot instance with credentials.
-        /// </summary>
-        public void Initialize()
+        public class BotWorker
         {
+            /// <summary>
+            /// Bot client descriptor.
+            /// </summary>
+            private ITelegramBotClient botClient;
+            private BotMessageLogic logic;
+
+            /// <summary>
+            /// Method initialize bot instance with credentials.
+            /// </summary>
+            public void Initialize()
+            {
             botClient = new TelegramBotClient(BotCredentials.BotToken);
             logic = new BotMessageLogic(this);
-        }
+            }
 
-        /// <summary>
-        /// Start message event handling.
-        /// </summary>
-        public void Start()
-        {
+            /// <summary>
+            /// Start message event handling.
+            /// </summary>
+            public void Start()
+            {
             botClient.OnMessage += logic.Bot_OnMessage;
             botClient.StartReceiving();
-        }
+            }
 
-        /// <summary>
-        /// Stop message event handling.
-        /// </summary>
-        public void Stop()
-        {
+            /// <summary>
+            /// Stop message event handling.
+            /// </summary>
+            public void Stop()
+            {
             botClient.StopReceiving();
-        }
+            }
 
 
 
-        /// <summary>
+            /// <summary>
         /// Method sending text messages to chat.
-        /// </summary>
+            /// </summary>
         /// <param name="chatId"> ID of the chat. </param>
         /// <param name="message"> Text message. </param>
         public async Task Bot_SendMessageAsync(Chat chatId, string message)
-        {
+            {
             await botClient.SendTextMessageAsync(chatId: chatId, text: message);
-        }
-    }
+                }
+            }
 
-    /// <summary>
+            /// <summary>
     /// Class contains message methods.
-    /// </summary>
-    public class BotMessageLogic
-    {
+            /// </summary>
+            {
         private BotWorker botWorker;
         public async Task Response(Chat chatId, string message)
         {
             await botWorker.Bot_SendMessageAsync(chatId, message);
-        }
+            }
         public BotMessageLogic(BotWorker worker)
         {
             botWorker = worker;
@@ -128,7 +120,7 @@ namespace Task_11_3_9
             if (e.Message.Text != null)
             {
                 Console.WriteLine($"Получено сообщение в чате: {e.Message.Chat.Id}.");
-
+                
                 await Response(e.Message.Chat, "Вы написали:\n" + e.Message.Text);
             }
         }
