@@ -21,6 +21,10 @@ namespace Task_11_3_8
         public static void Main(string[] args)
         {
             var bot = new BotWorker();
+<<<<<<<<< Temporary merge branch 1
+
+=========
+>>>>>>>>> Temporary merge branch 2
             bot.Initialize();
             bot.Start();
 
@@ -39,6 +43,7 @@ namespace Task_11_3_8
         /// <summary>
         /// Telegram bot account credentials class.
         /// </summary>
+<<<<<<<<< Temporary merge branch 1
         public static class BotCredentials
         {
             /// <summary>
@@ -105,7 +110,7 @@ namespace Task_11_3_8
         public async Task Response(Chat chatId, string message)
         {
             await botWorker.Bot_SendMessageAsync(chatId, message);
-        }
+            }
         public BotMessageLogic(BotWorker worker)
         {
             botWorker = worker;
@@ -122,6 +127,7 @@ namespace Task_11_3_8
                 Console.WriteLine($"Получено сообщение в чате: {e.Message.Chat.Id}.");
 
                 await Response(e.Message.Chat, "Вы написали:\n" + e.Message.Text);
+>>>>>>>>> Temporary merge branch 2
             }
         }
     }
