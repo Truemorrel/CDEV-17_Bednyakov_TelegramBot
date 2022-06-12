@@ -2,7 +2,7 @@
 // Copyright (c) CDEV-17. All rights reserved.
 // </copyright>
 using System;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types;
@@ -129,7 +129,6 @@ namespace Task_11_3_9
             botWorker.Bot_SendMessage(chatId, message);
         }
 
-
         /// <summary>
         /// Message handler.
         /// </summary>
@@ -143,6 +142,22 @@ namespace Task_11_3_9
                 
                 Response(e.Message.Chat, "Вы написали:\n" + e.Message.Text);
             }
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class Conversation
+    {
+        private Chat telegramChat;
+
+        private List<Message> telegramMessages;
+
+        public Conversation(Chat chat)
+        {
+            telegramChat = chat;
+            telegramMessages = new List<Message>();
         }
     }
 }
