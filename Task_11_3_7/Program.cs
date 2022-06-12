@@ -36,78 +36,78 @@ namespace Task_11_3_7
 
             bot.Stop();
         }
+    }
 
         /// <summary>
         /// Telegram bot account credentials class.
         /// </summary>
-        public static class BotCredentials
+    public static class BotCredentials
+    {
+        /// <summary>
+        /// Access token.
+        /// </summary>
+        public static readonly string BotToken = "5224117853:AAGCWDg8X_xYiBHeqBf86X8XKecH8FTI8lw";
+    }
+
+    /// <summary>
+    /// Class running bot client.
+    /// </summary>
+    public class BotWorker
+    {
+        /// <summary>
+        /// Bot client descriptor.
+        /// </summary>
+        private ITelegramBotClient botClient;
+
+        /// <summary>
+        /// Method initialize bot instance with credentials.
+        /// </summary>
+        public void Initialize()
         {
-            /// <summary>
-            /// Access token.
-            /// </summary>
-            public static readonly string BotToken = "5224117853:AAGCWDg8X_xYiBHeqBf86X8XKecH8FTI8lw";
+            botClient = new TelegramBotClient(BotCredentials.BotToken);
         }
 
         /// <summary>
-        /// Class running bot client.
+        /// Start message event handling.
         /// </summary>
-        public class BotWorker
+        public void Start()
         {
-            /// <summary>
-            /// Bot client descriptor.
-            /// </summary>
-            private ITelegramBotClient botClient;
+            botClient.OnMessage += Bot_OnMessage;
+            botClient.StartReceiving();
+        }
 
-            /// <summary>
-            /// Method initialize bot instance with credentials.
-            /// </summary>
-            public void Initialize()
+        /// <summary>
+        /// Stop message event handling.
+        /// </summary>
+        public void Stop()
+        {
+            botClient.StopReceiving();
+        }
+
+        /// <summary>
+        /// Message handler.
+        /// </summary>
+        /// <param name="sender">A source of the event object. </param>
+        /// <param name="e">Event data object.</param>
+        private void Bot_OnMessage(object sender, MessageEventArgs e)
+        {
+            if (e.Message.Text != null)
             {
-                botClient = new TelegramBotClient(BotCredentials.BotToken);
-            }
+                Console.WriteLine($"Получено сообщение в чате: {e.Message.Chat.Id}.");
 
-            /// <summary>
-            /// Start message event handling.
-            /// </summary>
-            public void Start()
-            {
-                botClient.OnMessage += Bot_OnMessage;
-                botClient.StartReceiving();
+                Bot_SendMessageAsync(e.Message.Chat, "Вы написали:\n" + e.Message.Text);
             }
+        }
 
-            /// <summary>
-            /// Stop message event handling.
-            /// </summary>
-            public void Stop()
-            {
-                botClient.StopReceiving();
-            }
-
-            /// <summary>
-            /// Message handler.
-            /// </summary>
-            /// <param name="sender">A source of the event object. </param>
-            /// <param name="e">Event data object.</param>
-            private void Bot_OnMessage(object sender, MessageEventArgs e)
-            {
-                if (e.Message.Text != null)
-                {
-                    Console.WriteLine($"Получено сообщение в чате: {e.Message.Chat.Id}.");
-
-                    Bot_SendMessageAsync(e.Message.Chat, "Вы написали:\n" + e.Message.Text);
-                }
-            }
-
-            /// <summary>
-            /// Method sending text messages to chat.
-            /// </summary>
-            /// <param name="chatId"> ID of the chat. </param>
-            /// <param name="message"> Text message. </param>
-            /// <returns> Retuns nothing. </returns>
-            private async Task Bot_SendMessageAsync(Chat chatId, string message)
-            {
-                await botClient.SendTextMessageAsync(chatId: chatId, text: "Вы написали:\n" + message);
-            }
+        /// <summary>
+        /// Method sending text messages to chat.
+        /// </summary>
+        /// <param name="chatId"> ID of the chat. </param>
+        /// <param name="message"> Text message. </param>
+        /// <returns> Retuns nothing. </returns>
+        private async Task Bot_SendMessageAsync(Chat chatId, string message)
+        {
+            await botClient.SendTextMessageAsync(chatId: chatId, text: "Вы написали:\n" + message);
         }
     }
 }

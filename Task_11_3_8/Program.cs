@@ -7,12 +7,12 @@ using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 
-namespace Task_11_3_8
+namespace Task_11_3_9
 {
     /// <summary>
     /// Program class.
     /// </summary>
-    internal class Program
+    public static class Program
     {
         /// <summary>
         /// Main method.
@@ -21,10 +21,6 @@ namespace Task_11_3_8
         public static void Main(string[] args)
         {
             var bot = new BotWorker();
-<<<<<<<<< Temporary merge branch 1
-
-=========
->>>>>>>>> Temporary merge branch 2
             bot.Initialize();
             bot.Start();
 
@@ -39,95 +35,113 @@ namespace Task_11_3_8
 
             bot.Stop();
         }
+    }
+
+    /// <summary>
+    /// Telegram bot account credentials class.
+    /// </summary>
+    public static class BotCredentials
+    {
+    /// <summary>
+    /// Access token.
+    /// </summary>
+    public static readonly string BotToken = "5224117853:AAGCWDg8X_xYiBHeqBf86X8XKecH8FTI8lw";
+    }
+
+    /// <summary>
+    /// Class running bot client.
+    /// </summary>
+    public class BotWorker
+    {
+        /// <summary>
+        /// Bot client descriptor.
+        /// </summary>
+        private ITelegramBotClient botClient;
 
         /// <summary>
-        /// Telegram bot account credentials class.
+        /// Bot message logic descriptor.
         /// </summary>
-<<<<<<<<< Temporary merge branch 1
-        public static class BotCredentials
+        private BotMessageLogic logic;
+
+        /// <summary>
+        /// Method initialize bot instance with credentials.
+        /// </summary>
+        public void Initialize()
         {
-            /// <summary>
-            /// Access token.
-            /// </summary>
-            public static readonly string BotToken = "5224117853:AAGCWDg8X_xYiBHeqBf86X8XKecH8FTI8lw";
+            botClient = new TelegramBotClient(BotCredentials.BotToken);
+            logic = new BotMessageLogic(this);
         }
 
         /// <summary>
-        /// Class running bot client.
+        /// Start message event handling.
         /// </summary>
-        public class BotWorker
+        public void Start()
         {
-            /// <summary>
-            /// Bot client descriptor.
-            /// </summary>
-            private ITelegramBotClient botClient;
-            private BotMessageLogic logic;
-
-            /// <summary>
-            /// Method initialize bot instance with credentials.
-            /// </summary>
-            public void Initialize()
-            {
-                botClient = new TelegramBotClient(BotCredentials.BotToken);
-                logic = new BotMessageLogic(this);
-            }
-
-            /// <summary>
-            /// Start message event handling.
-            /// </summary>
-            public void Start()
-            {
-                botClient.OnMessage += logic.Bot_OnMessage;
-                botClient.StartReceiving();
-            }
-
-            /// <summary>
-            /// Stop message event handling.
-            /// </summary>
-            public void Stop()
-            {
-                botClient.StopReceiving();
-            }
-
-
-
-            /// <summary>
-            /// Method sending text messages to chat.
-            /// </summary>
-            /// <param name="chatId"> ID of the chat. </param>
-            /// <param name="message"> Text message. </param>
-            public async Task Bot_SendMessageAsync(Chat chatId, string message)
-            {
-                await botClient.SendTextMessageAsync(chatId: chatId, text: message);
-            }
+            botClient.OnMessage += logic.Bot_OnMessage;
+            botClient.StartReceiving();
         }
 
-            /// <summary>
+        /// <summary>
+        /// Stop message event handling.
+        /// </summary>
+        public void Stop()
+        {
+            botClient.StopReceiving();
+        }
+
+        /// <summary>
+        /// Method sending text messages to chat.
+        /// </summary>
+        /// <param name="chatId"> ID of the chat. </param>
+        /// <param name="message"> Text message. </param>
+        public void Bot_SendMessage(Chat chatId, string message)
+        {
+            botClient.SendTextMessageAsync(chatId: chatId, text: message);
+        }
+    }
+
+    /// <summary>
     /// Class contains message methods.
-            /// </summary>
-            {
+    /// </summary>
+    public class BotMessageLogic
+    {
+        /// <summary>
+        /// BotWorker member object.
+        /// </summary>
         private BotWorker botWorker;
-        public async Task Response(Chat chatId, string message)
-        {
-            await botWorker.Bot_SendMessageAsync(chatId, message);
-            }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BotMessageLogic"/> class.
+        /// </summary>
+        /// <param name="worker"> Binding worker class object. </param>
         public BotMessageLogic(BotWorker worker)
         {
             botWorker = worker;
         }
+
+        /// <summary>
+        /// Response automation.
+        /// </summary>
+        /// <param name="chatId"> chat object </param>
+        /// <param name="message"> message to send </param>
+        public void Response(Chat chatId, string message)
+        {
+            botWorker.Bot_SendMessage(chatId, message);
+        }
+
+
         /// <summary>
         /// Message handler.
         /// </summary>
         /// <param name="sender">A source of the event object. </param>
         /// <param name="e">Event data object.</param>
-        public async void Bot_OnMessage(object sender, MessageEventArgs e)
+        public void Bot_OnMessage(object sender, MessageEventArgs e)
         {
             if (e.Message.Text != null)
             {
                 Console.WriteLine($"Получено сообщение в чате: {e.Message.Chat.Id}.");
-
-                await Response(e.Message.Chat, "Вы написали:\n" + e.Message.Text);
->>>>>>>>> Temporary merge branch 2
+                
+                Response(e.Message.Chat, "Вы написали:\n" + e.Message.Text);
             }
         }
     }
